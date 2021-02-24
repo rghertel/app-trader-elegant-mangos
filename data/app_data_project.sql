@@ -14,5 +14,8 @@ ORDER BY g.rating; --
 SELECT count (primary_genre) AS times_downloaded, primary_genre
 FROM app_store_apps
 group by primary_genre
-order by times_downloaded DESC;
+order by times_downloaded DESC; -- games by a lot/ 3,862
+
+SELECT install_count
+FROM play_store_apps;
 
