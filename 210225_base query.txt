@@ -1,0 +1,7 @@
+SELECT DISTINCT(p.name), p.rating, p.review_count, p.type, cast(replace(replace (install_count,'+',''),',','')  as int) as install_count, a.primary_genre, p.content_rating from play_store_apps as p
+INNER JOIN app_store_apps as a
+ON a.name = p.name
+WHERE p.rating >= 4.5 AND p.content_rating = 'Teen' and a.primary_genre = 'Games'
+GROUP BY p.name, p.rating, p.review_count, p.type, p.install_count, p.content_rating, a.primary_genre
+HAVING AVG(p.review_count) > 445000
+ORDER BY p.review_count DESC
