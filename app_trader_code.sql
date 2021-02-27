@@ -47,8 +47,7 @@ FROM app_store_apps AS a
 INNER JOIN pta
 ON a.name = pta.name
 WHERE ROUND((a.rating+pta.rating)/2,1) >= 4.5 AND CAST(a.review_count AS int) > 12893 AND pta.review_count > 444153
-	AND CONCAT(a.primary_genre,', ', pta.genres) ILIKE '%games%' /*AND CONCAT(a.content_rating, ', ', pta.content_rating)
-	ILIKE '%teen%'*/
+	AND CONCAT(a.primary_genre,', ', pta.genres) ILIKE '%games%' /* AND CONCAT(a.content_rating, ', ', pta.content_rating) ILIKE '%teen%'*/
 ORDER BY rating DESC;
 
 --Scott's Query
