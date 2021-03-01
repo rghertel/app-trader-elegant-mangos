@@ -1,11 +1,13 @@
-SELECT DISTINCT ON (name)*
+SELECT INITCAP(name), rating, install_count, play_review_count
 FROM
-	(SELECT DISTINCT p.name, a.review_count AS apple_review_count, p.review_count AS play_review_count, p.rating, a.primary_genre, p.genres,
-	a.rating, RTRIM(p.install_count,'+') as install_count, RTRIM(a.content_rating, '+') AS apple_content_rating, p.content_rating AS play_content_rating
+	(SELECT p.name, p.review_count AS play_review_count, p.rating, p.genres,
+ 	CAST(REPLACE(RTRIM(p.install_count,'+'),',','') AS int) AS install_count,
+	p.content_rating AS play_content_rating
 	FROM play_store_apps AS p
 	INNER JOIN app_store_apps AS a 
-	USING (name, rating)
-	WHERE p.rating > 4
-	AND A.rating > 4
-	--AND P.CONTENT_Rating = 'Everyone'
-	ORDER BY p.review_count DESC) as sub
+	ON a.name = p.name
+	WHERE p.rating >= 4.5
+	AND a.primary_genre = 'Games'
+	AND p.CONTENT_Rating = 'Teen'
+	GROUP BY p.name, p.review_count, p.rating, p.genres, p.content_rating, p.install_count
+	ORDER BY p.review_count DESC) AS sub
