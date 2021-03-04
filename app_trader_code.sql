@@ -131,3 +131,19 @@ UNION ALL
 SELECT name, genres
 FROM play_store_apps AS p
 WHERE genres ILIKE '%music%' AND rating >= 4.5;
+
+--to create our own charts showing popularity of teens and games:
+WITH pta AS (
+SELECT DISTINCT name, ROUND(AVG(review_count),0) AS review_count, rating, 
+	ROUND(AVG(CAST(REPLACE(REPLACE(install_count,'+',''),',','') AS int)),0) AS install_count, price,
+	genres, content_rating
+FROM play_store_apps
+GROUP BY name, rating, genres, price, content_rating)
+
+SELECT a.name AS app, CAST(a.review_count AS int) AS app_reviews, pta.review_count AS play_reviews, ROUND((a.rating+pta.rating)/2,1) AS rating, 
+	pta.install_count AS play_install_count, a.price AS app_price, pta.price AS play_price, 
+	CONCAT(a.primary_genre,', ', pta.genres) AS genre, CONCAT(a.content_rating, ', ', pta.content_rating) AS content_rated
+FROM app_store_apps AS a
+INNER JOIN pta
+ON a.name = pta.name
+ORDER BY rating DESC;
