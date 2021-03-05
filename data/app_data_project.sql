@@ -16,6 +16,11 @@ FROM app_store_apps
 group by primary_genre
 order by times_downloaded DESC; -- games by a lot/ 3,862
 
+SELECT count (category) AS times_downloaded, category
+FROM play_store_apps
+group by category
+order by times_downloaded DESC; -- games by a lot/ 3,862
+
 SELECT DISTINCT(p.name), p.rating, p.review_count, p.type, RTRIM(p.install_count,'+') as install_count, a.primary_genre, p.content_rating from play_store_apps as p
 INNER JOIN app_store_apps as a
 ON a.name = p.name
@@ -80,7 +85,7 @@ ON a.name = p.name
 WHERE p.rating >= 4.5 AND p.content_rating = 'Teen' AND p.review_count < 100000000 and a.primary_genre = 'Games'
 GROUP BY p.name, p.rating, p.review_count, p.type, p.install_count, p.content_rating, a.primary_genre
 HAVING AVG(p.review_count) > 445000
-ORDER BY p.review_count DESC;-- Scott's Query
+ORDER BY p.review_count;-- Scott's Query
 
 WITH pta AS (
 SELECT DISTINCT name, ROUND(AVG(review_count),0) AS review_count, rating,
@@ -115,6 +120,13 @@ INNER JOIN app_store_apps AS a
 ON a.name = p.name
 WHERE p.content_rating = 'Teen' AND p.category = 'GAME'
 ORDER BY adoption_rate desc; --Scott's Adoption Rate Theory? 
+
+SELECT DISTINCT a.review_count AS apple_reviews, p.review_count AS google_reviews, a.name, p.name
+FROM app_store_apps AS a
+JOIN play_store_apps AS p
+ON a.name = p.name
+ORDER BY p.review_count ASC;
+
 
 
 
